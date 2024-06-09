@@ -34,6 +34,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: "372514986165.dkr.ecr.ap-south-1.amazonaws.com/app_repo"
+          ECR_REPOSITORY: "app_repo"
           IMAGE_TAG: latest
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
