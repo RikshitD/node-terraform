@@ -1,8 +1,10 @@
 name: Deploy to Amazon ECS
+
 on:
   push:
     branches:
       - master
+
 env:
   AWS_REGION: ap-south-1
   ECS_CLUSTER: app_cluster
@@ -22,9 +24,9 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: "AKIAVNO47TC2STMMNFTJ"
-          aws-secret-access-key: "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"
-          aws-region: "ap-south-1"
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -33,8 +35,8 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
-          ECR_REGISTRY: "372514986165.dkr.ecr.ap-south-1.amazonaws.com/app_repo"
-          ECR_REPOSITORY: "app_repo"
+          ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
+          ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
           IMAGE_TAG: latest
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
@@ -56,3 +58,4 @@ jobs:
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: false
+
